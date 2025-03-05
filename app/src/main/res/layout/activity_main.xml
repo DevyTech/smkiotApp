@@ -7,11 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_connect"
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/servoJendela"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:checked="true"
+        app:thumbIcon="@drawable/checked_switch_icon"/>
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/servoPintu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:checked="false"
+        app:thumbIcon="@drawable/checked_switch_icon"
+        android:layout_below="@id/servoJendela"/>
 </RelativeLayout>

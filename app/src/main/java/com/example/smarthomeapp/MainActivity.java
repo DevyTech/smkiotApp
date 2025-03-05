@@ -2,8 +2,6 @@ package com.example.smarthomeapp;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,8 +19,6 @@ import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button connect;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        connect = findViewById(R.id.btn_connect);
 
-        String url = "http://192.168.1.8:8080/";
+        String url = "http://stmiot.local:8080";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("Response","Response is : " + response.substring(0, 500));
-                        Toast.makeText(MainActivity.this, "Response is : " + response.substring(0, 500), Toast.LENGTH_LONG).show();
+                        int maxLength = Math.min(500, response.length());
+                        Log.d("Response","Response is : " + response.substring(0, maxLength));
+                        Toast.makeText(MainActivity.this, "Response is : " + response.substring(0, maxLength), Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -54,13 +50,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
         queue.add(stringRequest);
-
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Button","Ditekan");
-
-            }
-        });
     }
 }
