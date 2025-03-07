@@ -28,6 +28,8 @@ public class ServoFragment extends Fragment {
     private TextView tv_status,tv_jendela;
     private MaterialSwitch jendela;
 
+    private boolean isLoading = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,7 +63,9 @@ public class ServoFragment extends Fragment {
         jendela.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                toggleJendela();
+                if (!isLoading){
+                    toggleJendela();
+                }
                 tv_jendela.setText(b ? "Jendela Terbuka" : "Jendela Tertutup");
             }
         });
@@ -96,6 +100,7 @@ public class ServoFragment extends Fragment {
     }
 
     public void getJendelaStatus(){
+        isLoading = true;
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/servoJendelaStatus",
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -103,8 +108,15 @@ public class ServoFragment extends Fragment {
                 try {
                     String status = response.getString("servoJendelaState");
                     tv_jendela.setText(status);
+                    if (status.equals("Jendela Terbuka")){
+                        jendela.setChecked(true);
+                    }else {
+                        jendela.setChecked(false);
+                    }
                 } catch (JSONException e) {
                     Log.e("Error JsonObject Response : ", e.toString());
+                } finally {
+                    isLoading = false;
                 }
             }
         }, new Response.ErrorListener() {
