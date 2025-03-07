@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ServoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Offline"
+        android:textSize="24sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/jendelaStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tertutup"
+        android:layout_above="@id/servoJendela"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"
+        android:letterSpacing="0.2"
+        android:textAllCaps="true"/>
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/servoJendela"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:checked="false"
+        app:thumbIcon="@drawable/checked_switch_icon"
+        app:thumbIconTint="@color/black"/>
+
+</RelativeLayout>
