@@ -10,20 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.materialswitch.MaterialSwitch;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ServoFragment extends Fragment {
 
     private TextView tv_status,tv_jendela;
     private MaterialSwitch jendela;
-    private String url;
-    private RequestQueue requestQueue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,13 +38,7 @@ public class ServoFragment extends Fragment {
         tv_jendela = view.findViewById(R.id.jendelaStatus);
         jendela = view.findViewById(R.id.servoJendela);
 
-        url = "http://192.168.1.54:8080";
-
-        requestQueue = MySingleton.getInstance(getActivity()).getRequestQueue();
-
-        requestQueue.start();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -65,7 +62,7 @@ public class ServoFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 toggleJendela();
-                tv_jendela.setText(b ? "Terbuka" : "Tertutup");
+                tv_jendela.setText(b ? "Jendela Terbuka" : "Jendela Tertutup");
             }
         });
 
@@ -73,8 +70,14 @@ public class ServoFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getJendelaStatus();
+    }
+
     private void toggleJendela(){
-        StringRequest request = new StringRequest(Request.Method.GET, url+"/servoJendela",
+        StringRequest request = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url+"/servoJendela",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -84,11 +87,32 @@ public class ServoFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect"," : "+error);
+                Log.e("Error to Connect : ", error.toString());
             }
         });
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
+    }
+
+    public void getJendelaStatus(){
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/servoJendelaStatus",
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String status = response.getString("servoJendelaState");
+                    tv_jendela.setText(status);
+                } catch (JSONException e) {
+                    Log.e("Error JsonObject Response : ", e.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error get Jendela Status : ",error.toString());
+            }
+        });
+        MySingleton.getInstance(getActivity()).addToRequestQueue(objectRequest);
     }
 }

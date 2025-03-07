@@ -33,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
+    private RequestQueue requestQueue;
+
+    public String url;
+
+    public static MainActivity mainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        mainActivity = this;
+
+        requestQueue = MySingleton.getInstance(this).getRequestQueue();
+
+        requestQueue.start();
+
+        url = "http://192.168.1.54:8080";
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         getSupportFragmentManager().beginTransaction().add(R.id.frame, new SensorFragment()).commit();
@@ -55,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.servoMenu) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame, new ServoFragment()).commit();
+                return true;
             }
             return false;
         });

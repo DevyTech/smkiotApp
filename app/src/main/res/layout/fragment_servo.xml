@@ -21,11 +21,11 @@
         android:id="@+id/jendelaStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tertutup"
+        android:text="Jendela Tertutup"
         android:layout_above="@id/servoJendela"
         android:layout_centerHorizontal="true"
         android:textSize="16sp"
-        android:letterSpacing="0.2"
+        android:letterSpacing="0.1"
         android:textAllCaps="true"/>
 
     <com.google.android.material.materialswitch.MaterialSwitch
