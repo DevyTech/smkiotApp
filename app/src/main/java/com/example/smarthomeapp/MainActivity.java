@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
         tv_jendela = findViewById(R.id.jendelaStatus);
         jendela = findViewById(R.id.servoJendela);
 
-        url = "http://192.168.1.3:8080";
+        url = "http://192.168.1.54:8080";
 
-        // Get a RequestQueue
         requestQueue = MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         requestQueue.start();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -76,31 +76,31 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        jendela.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                toggleJendela();
-//                tv_jendela.setText(b ? "Terbuka" : "Tertutup");
-//            }
-//        });
+        jendela.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                toggleJendela();
+                tv_jendela.setText(b ? "Terbuka" : "Tertutup");
+            }
+        });
     }
 
-//    private void toggleJendela(){
-//        StringRequest requestJendela = new StringRequest(Request.Method.GET, url+"/servoJendela",
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        int maxLength = Math.min(500, response.length());
-//                        Log.d("Response Jendela","Response is : " + response.substring(0, maxLength));
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("Error to Connect"," : "+error);
-//            }
-//        });
-//
-//        // Add the request to the RequestQueue.
-//        requestQueue.add(requestJendela);
-//    }
+    private void toggleJendela(){
+        StringRequest request = new StringRequest(Request.Method.GET, url+"/servoJendela",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        int maxLength = Math.min(500, response.length());
+                        Log.d("Response Jendela","Response is : " + response.substring(0, maxLength));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error to Connect"," : "+error);
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(request);
+    }
 }

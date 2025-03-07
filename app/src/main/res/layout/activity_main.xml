@@ -36,4 +36,16 @@
         android:checked="false"
         app:thumbIcon="@drawable/checked_switch_icon"
         app:thumbIconTint="@color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_navigation_menu"
+            app:backgroundTint="@color/red_500"
+            app:itemTextColor="@color/white"/>
+    </LinearLayout>
 </RelativeLayout>

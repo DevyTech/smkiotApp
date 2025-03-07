@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sensorMenu"
+        android:enabled="true"
+        android:icon="@drawable/baseline_sensors_24"
+        android:title="@string/item1"/>
+    <item
+        android:id="@+id/ledMenu"
+        android:enabled="true"
+        android:icon="@drawable/baseline_light_mode_24"
+        android:title="@string/item2"/>
+    <item
+        android:id="@+id/servoMenu"
+        android:enabled="true"
+        android:icon="@drawable/baseline_sensors_24"
+        android:title="@string/item3"/>
+    <item
+        android:id="@+id/aboutMenu"
+        android:enabled="true"
+        android:icon="@drawable/baseline_info_24"
+        android:title="@string/item4"/>
+</menu>
