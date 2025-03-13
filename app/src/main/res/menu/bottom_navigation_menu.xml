@@ -4,7 +4,7 @@
         android:id="@+id/sensorMenu"
         android:enabled="true"
         android:icon="@drawable/baseline_sensors_24"
-        android:title="@string/item1"/>
+        android:title="@string/item1" />
     <item
         android:id="@+id/ledMenu"
         android:enabled="true"
@@ -13,11 +13,11 @@
     <item
         android:id="@+id/servoMenu"
         android:enabled="true"
-        android:icon="@drawable/baseline_sensors_24"
+        android:icon="@drawable/baseline_sensor_door_24"
         android:title="@string/item3"/>
     <item
         android:id="@+id/aboutMenu"
         android:enabled="true"
-        android:icon="@drawable/baseline_info_24"
+        android:icon="@drawable/baseline_settings_24"
         android:title="@string/item4"/>
 </menu>

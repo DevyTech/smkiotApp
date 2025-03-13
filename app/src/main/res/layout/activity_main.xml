@@ -10,7 +10,8 @@
     <FrameLayout
         android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -18,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_navigation_menu"
-        app:backgroundTint="@color/red_500"
+        app:backgroundTint="@color/black2"
         app:itemTextColor="@color/white"
-        app:itemActiveIndicatorStyle="@android:color/transparent"/>
+        app:itemActiveIndicatorStyle="@android:color/transparent" />
 </RelativeLayout>

@@ -7,5 +7,13 @@
     <string name="item1">Sensor</string>
     <string name="item2">LED</string>
     <string name="item3">Servo</string>
-    <string name="item4">About</string>
+    <string name="item4">Setting</string>
+
+    <!--  Sensor Strings  -->
+    <string name="suhuTitle">Kondisi Suhu</string>
+    <string name="kelembapanTitle">Kelembapan</string>
+    <string name="jarakTitle">Jarak</string>
+    <string name="airTitle">Air</string>
+    <string name="gasTitle">Gas</string>
+    <string name="asapTitle">Asap</string>
 </resources>
