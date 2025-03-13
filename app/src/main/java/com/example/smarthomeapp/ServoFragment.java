@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 public class ServoFragment extends Fragment {
 
-    private TextView tv_status,tv_jendela;
+    private TextView tv_jendela;
     private MaterialSwitch jendela;
 
     private boolean isLoading = false;
@@ -35,8 +35,6 @@ public class ServoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_servo, container, false);
-
-        tv_status = view.findViewById(R.id.status);
         tv_jendela = view.findViewById(R.id.jendelaStatus);
         jendela = view.findViewById(R.id.servoJendela);
 
@@ -46,7 +44,6 @@ public class ServoFragment extends Fragment {
                     public void onResponse(String response) {
                         int maxLength = Math.min(500, response.length());
                         Log.d("Response","Response is : " + response.substring(0, maxLength));
-                        tv_status.setText("Online");
                     }
                 }, new Response.ErrorListener() {
             @Override

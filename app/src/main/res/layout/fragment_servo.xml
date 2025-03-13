@@ -6,16 +6,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ServoFragment">
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Offline"
-        android:textSize="24sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvPintu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+                    <TextView
+                        android:id="@+id/tvSuhuTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/suhuTitle"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:fontFamily="@font/ubuntu"
+                        android:layout_marginBottom="15dp"/>
+                    <ImageView
+                        android:id="@+id/imgSuhu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_device_thermostat_64"/>
+                    <TextView
+                        android:id="@+id/tvSuhu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvSuhuTitle"
+                        android:text="50%"
+                        style="@style/TextAppearance.AppCompat.Headline"
+                        android:fontFamily="@font/ubuntu"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:id="@+id/jendelaStatus"
