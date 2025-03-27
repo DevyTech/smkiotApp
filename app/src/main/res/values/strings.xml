@@ -3,6 +3,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--  Splash Strings  -->
+    <string name="welcome">Smarthome App</string>
+
     <!--  Menu Strings  -->
     <string name="item1">Sensor</string>
     <string name="item2">LED</string>
