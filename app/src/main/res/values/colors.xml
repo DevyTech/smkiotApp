@@ -17,5 +17,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="black2">#34495e</color>
+    <color name="onyx">#353839</color>
+    <color name="frost_black">#191c20</color>
     <color name="green">#2CEE71</color>
 </resources>
