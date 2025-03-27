@@ -24,5 +24,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <item name="android:fontFamily">@font/ubuntu</item>
+        <!--    Add custom theme to main theme  -->
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
     </style>
 </resources>

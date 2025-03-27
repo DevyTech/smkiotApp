@@ -1,5 +1,6 @@
 package com.example.smarthomeapp;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,23 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ServoFragment extends Fragment {
-
-    private TextView tv_jendela;
-    private MaterialSwitch jendela;
+    private TextView tv_garasi,tv_jendela,tv_pintu;
+    private MaterialSwitch jendelaSwitch, pintuSwitch;
 
     private boolean isLoading = false;
 
@@ -35,8 +34,13 @@ public class ServoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_servo, container, false);
+
+        tv_garasi = view.findViewById(R.id.garasiStatus);
         tv_jendela = view.findViewById(R.id.jendelaStatus);
-        jendela = view.findViewById(R.id.servoJendela);
+        tv_pintu = view.findViewById(R.id.pintuStatus);
+
+        jendelaSwitch = view.findViewById(R.id.servoJendela);
+        pintuSwitch = view.findViewById(R.id.servoPintu);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url,
                 new Response.Listener<String>() {
@@ -57,13 +61,23 @@ public class ServoFragment extends Fragment {
 
 
 
-        jendela.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        jendelaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (!isLoading){
                     toggleJendela();
                 }
                 tv_jendela.setText(b ? "Jendela Terbuka" : "Jendela Tertutup");
+            }
+        });
+
+        pintuSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!isLoading){
+                    togglePintu();
+                }
+                tv_pintu.setText(b ? "Pintu Terbuka" : "Pintu Tertutup");
             }
         });
 
@@ -75,6 +89,7 @@ public class ServoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getJendelaStatus();
+        getPintuStatus();
     }
 
     private void toggleJendela(){
@@ -106,9 +121,9 @@ public class ServoFragment extends Fragment {
                     String status = response.getString("servoJendelaState");
                     tv_jendela.setText(status);
                     if (status.equals("Jendela Terbuka")){
-                        jendela.setChecked(true);
+                        jendelaSwitch.setChecked(true);
                     }else {
-                        jendela.setChecked(false);
+                        jendelaSwitch.setChecked(false);
                     }
                 } catch (JSONException e) {
                     Log.e("Error JsonObject Response : ", e.toString());
@@ -120,6 +135,54 @@ public class ServoFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error get Jendela Status : ",error.toString());
+            }
+        });
+        MySingleton.getInstance(getActivity()).addToRequestQueue(objectRequest);
+    }
+
+    private void togglePintu(){
+        StringRequest request = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url+"/servoPintu",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        int maxLength = Math.min(500, response.length());
+                        Log.d("Response Pintu","Response is : " + response.substring(0, maxLength));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error to Connect : ", error.toString());
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
+    }
+
+    public void getPintuStatus(){
+        isLoading = true;
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/servoPintuStatus",
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String status = response.getString("servoPintuState");
+                    tv_jendela.setText(status);
+                    if (status.equals("Pintu Terbuka")){
+                        jendelaSwitch.setChecked(true);
+                    }else {
+                        jendelaSwitch.setChecked(false);
+                    }
+                } catch (JSONException e) {
+                    Log.e("Error JsonObject Response : ", e.toString());
+                } finally {
+                    isLoading = false;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error get Pintu Status : ",error.toString());
             }
         });
         MySingleton.getInstance(getActivity()).addToRequestQueue(objectRequest);

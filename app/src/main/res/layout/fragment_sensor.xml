@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tvSuhuTitle"
-                        android:text="50%"
+                        android:text="50\u2103"
                         style="@style/TextAppearance.AppCompat.Headline"
                         android:fontFamily="@font/ubuntu"/>
                 </RelativeLayout>
@@ -130,7 +130,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/airTitle"
                         style="@style/TextAppearance.AppCompat.Title"
-                        android:fontFamily="@font/ubuntu"                        android:layout_marginBottom="15dp"/>
+                        android:fontFamily="@font/ubuntu"
+                        android:layout_marginBottom="15dp"/>
                     <ImageView
                         android:id="@+id/imgAir"
                         android:layout_width="wrap_content"
