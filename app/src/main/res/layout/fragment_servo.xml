@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/jendelaStatus"
                         android:layout_marginTop="10dp"
-                        android:checked="true"
+                        android:checked="false"
                         app:thumbIcon="@drawable/checked_switch_icon"
                         app:thumbIconTint="@color/black"/>
                     <ImageView
