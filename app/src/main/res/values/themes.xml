@@ -27,5 +27,15 @@
 
         <!--    Add custom theme to main theme  -->
         <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <!--  Bottom navigation custom theme  -->
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorSurface">@color/android:transparent</item>
     </style>
 </resources>
