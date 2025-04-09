@@ -6,7 +6,7 @@
     </style>
 
     <style name="ThemeOverlay.App.Switch" parent="">
-        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimary">@color/blue</item>
         <item name="colorSurfaceVariant">@color/android:transparent</item>
     </style>
 </resources>

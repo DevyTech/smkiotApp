@@ -20,6 +20,8 @@
     <color name="onyx">#353839</color>
     <color name="frost_black">#191c20</color>
     <color name="green">#2CEE71</color>
+    <color name="blue">#008CFF</color>
+    <color name="red">#FF0000</color>
 
     <color name="gray">#d7d7d7</color>
 </resources>

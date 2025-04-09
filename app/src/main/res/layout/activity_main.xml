@@ -35,10 +35,9 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="10dp"
-        app:menu="@menu/bottom_navigation_menu"
-        app:itemActiveIndicatorStyle="@android:color/transparent" />
+        android:layout_alignParentBottom="true"
+        app:itemActiveIndicatorStyle="@android:color/transparent"
+        app:menu="@menu/bottom_navigation_menu" />
 </RelativeLayout>

@@ -37,5 +37,7 @@
 
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
         <item name="colorSurface">@color/android:transparent</item>
+        <item name="colorOnSecondaryContainer">@color/blue</item>
+        <item name="colorOnSurface">@color/blue</item>
     </style>
 </resources>
