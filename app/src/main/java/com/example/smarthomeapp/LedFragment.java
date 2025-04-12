@@ -16,8 +16,12 @@ import android.widget.ImageView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.card.MaterialCardView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LedFragment extends Fragment {
     private MaterialCardView teras,tengah,kamar1,kamar2,dapur,garasi;
@@ -71,6 +75,9 @@ public class LedFragment extends Fragment {
         teras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isLoading){
+                    toggleLed("teras");
+                }
                 if (isTerasOn){
                     teras.setCardBackgroundColor(Color.TRANSPARENT);
                     ivTeras.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -85,6 +92,9 @@ public class LedFragment extends Fragment {
         tengah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isLoading){
+                    toggleLed("tengah");
+                }
                 if (isTengahOn){
                     tengah.setCardBackgroundColor(Color.TRANSPARENT);
                     ivTengah.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -99,6 +109,9 @@ public class LedFragment extends Fragment {
         kamar1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isLoading){
+                    toggleLed("kamar1");
+                }
                 if (isKamar1On){
                     kamar1.setCardBackgroundColor(Color.TRANSPARENT);
                     ivKamar1.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -113,6 +126,9 @@ public class LedFragment extends Fragment {
         kamar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isLoading){
+                    toggleLed("kamar2");
+                }
                 if (isKamar2On){
                     kamar2.setCardBackgroundColor(Color.TRANSPARENT);
                     ivKamar2.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -127,6 +143,9 @@ public class LedFragment extends Fragment {
         dapur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isLoading){
+                    toggleLed("dapur");
+                }
                 if (isDapurOn){
                     dapur.setCardBackgroundColor(Color.TRANSPARENT);
                     ivDapur.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -141,6 +160,9 @@ public class LedFragment extends Fragment {
         garasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isLoading){
+                    toggleLed("garasi");
+                }
                 if (isGarasiOn){
                     garasi.setCardBackgroundColor(Color.TRANSPARENT);
                     ivGarasi.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -155,8 +177,14 @@ public class LedFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLedStatus();
+    }
+
     private void toggleLed(String ledId){
-        StringRequest request = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url + "/" + ledId,
+        StringRequest request = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url + "/toggle-led?led=" + ledId,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -171,5 +199,43 @@ public class LedFragment extends Fragment {
         });
 
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
+    }
+
+    private void getLedStatus(){
+        isLoading = true;
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/get-led-status",
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String statusTeras = response.getString("stateTeras");
+                    String statusTengah = response.getString("stateTengah");
+                    String statusKamar1 = response.getString("stateKamar1");
+                    String statusKamar2 = response.getString("stateKamar2");
+                    String statusDapur = response.getString("stateDapur");
+                    String statusGarasi = response.getString("stateGarasi");
+
+                    if (statusTeras.equals("ON")){
+                        teras.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue));
+                        ivTengah.setImageResource(R.drawable.baseline_lightbulb_148);
+                    }else {
+                        tengah.setCardBackgroundColor(Color.TRANSPARENT);
+                        ivTengah.setImageResource(R.drawable.baseline_lightbulb_outline_148);
+                    }
+
+                } catch (JSONException e){
+                    Log.e("Error JsonObject Response : ", e.toString());
+                } finally {
+                    isLoading = false;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error get Status : ", error.toString());
+            }
+        });
+
+        MySingleton.getInstance(getActivity()).addToRequestQueue(objectRequest);
     }
 }
