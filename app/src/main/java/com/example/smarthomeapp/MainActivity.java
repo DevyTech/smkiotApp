@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
             if (itemId == R.id.sensorMenu){
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SensorFragment()).commit();
                 return true;
+            } else if (itemId == R.id.ledMenu) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new LedFragment()).commit();
+                return true;
             } else if (itemId == R.id.servoMenu) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame, new ServoFragment()).commit();
                 return true;
