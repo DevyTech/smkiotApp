@@ -7,11 +7,16 @@ import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.card.MaterialCardView;
 
 public class LedFragment extends Fragment {
@@ -19,6 +24,7 @@ public class LedFragment extends Fragment {
 
     private ImageView ivTeras,ivTengah,ivKamar1,ivKamar2,ivDapur,ivGarasi;
 
+    private boolean isLoading = false;
     private boolean isTerasOn = false;
     private boolean isTengahOn = false;
     private boolean isKamar1On = false;
@@ -45,6 +51,22 @@ public class LedFragment extends Fragment {
         ivKamar2 = view.findViewById(R.id.imgvKamar2);
         ivDapur = view.findViewById(R.id.imgvDapur);
         ivGarasi = view.findViewById(R.id.imgvGarasi);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        int maxLength = Math.min(500, response.length());
+                        Log.d("Response","Response is : " + response.substring(0, maxLength));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error to Connect"," : "+error);
+            }
+        });
+
+        MySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
 
         teras.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,5 +153,23 @@ public class LedFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void toggleLed(String ledId){
+        StringRequest request = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url + "/" + ledId,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        int maxLength = Math.min(500, response.length());
+                        Log.d("Response "+ledId,"Response is : " + response.substring(0, maxLength));
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error to Connect : ", error.toString());
+            }
+        });
+
+        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
 }
