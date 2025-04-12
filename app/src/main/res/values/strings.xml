@@ -10,7 +10,8 @@
     <string name="item1">Sensor</string>
     <string name="item2">LED</string>
     <string name="item3">Servo</string>
-    <string name="item4">Setting</string>
+    <string name="item4">Camera</string>
+    <string name="item5">Setting</string>
 
     <!--  Sensor Strings  -->
     <string name="suhuTitle">Kondisi Suhu</string>
