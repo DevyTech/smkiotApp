@@ -1,5 +1,4 @@
 package com.example.smarthomeapp;
-
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -53,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.servoMenu) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame, new ServoFragment()).commit();
+                return true;
+            } else if (itemId == R.id.cameraMenu) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new CameraFragment()).commit();
                 return true;
             }
             return false;
