@@ -3,6 +3,7 @@ package com.example.smarthomeapp;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
 public class ServoFragment extends Fragment {
     private TextView tv_garasi,tv_jendela,tv_pintu;
     private MaterialSwitch jendelaSwitch, pintuSwitch;
+    private ImageView img_garasi,img_jendela,img_pintu;
 
     private boolean isLoading = false;
 
@@ -40,6 +43,10 @@ public class ServoFragment extends Fragment {
 
         jendelaSwitch = view.findViewById(R.id.servoJendela);
         pintuSwitch = view.findViewById(R.id.servoPintu);
+
+        img_garasi = view.findViewById(R.id.imgGarasi);
+        img_jendela = view.findViewById(R.id.imgJendela);
+        img_pintu = view.findViewById(R.id.imgPintu);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url,
                 new Response.Listener<String>() {
@@ -67,6 +74,7 @@ public class ServoFragment extends Fragment {
                     toggleJendela();
                 }
                 tv_jendela.setText(b ? "Jendela Terbuka" : "Jendela Tertutup");
+                img_jendela.setColorFilter(b ? ContextCompat.getColor(requireActivity(), R.color.blue) : ContextCompat.getColor(requireActivity(), R.color.gray));
             }
         });
 
@@ -77,6 +85,7 @@ public class ServoFragment extends Fragment {
                     togglePintu();
                 }
                 tv_pintu.setText(b ? "Pintu Terbuka" : "Pintu Tertutup");
+                img_pintu.setColorFilter(b ? ContextCompat.getColor(requireActivity(), R.color.blue) : ContextCompat.getColor(requireActivity(), R.color.gray));
             }
         });
 

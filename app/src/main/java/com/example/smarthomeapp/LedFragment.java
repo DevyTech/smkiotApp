@@ -216,7 +216,7 @@ public class LedFragment extends Fragment {
                     String statusGarasi = response.getString("stateGarasi");
 
                     if (statusTeras.equals("ON")){
-                        teras.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue));
+                        teras.setCardBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.blue));
                         ivTengah.setImageResource(R.drawable.baseline_lightbulb_148);
                     }else {
                         tengah.setCardBackgroundColor(Color.TRANSPARENT);
