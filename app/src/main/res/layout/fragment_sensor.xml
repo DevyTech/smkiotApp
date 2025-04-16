@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SensorFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -206,7 +207,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/baseline_smoking_rooms_64"/>
+                        android:src="@drawable/baseline_smoking_rooms_64"
+                        app:tint="?attr/colorControlNormal"/>
                     <TextView
                         android:id="@+id/tvAsap"
                         android:layout_width="wrap_content"

@@ -11,6 +11,8 @@
 <!--        <item name="colorOnSecondary">@color/black</item>-->
 <!--        &lt;!&ndash; Status bar color. &ndash;&gt;-->
 <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
+
+
         <!-- Customize your theme here. -->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_500</item>
@@ -28,6 +30,9 @@
         <!--    Add custom theme to main theme  -->
         <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        
+        <!--   Drawable Control Color     -->
+        <item name="colorControlNormal">@color/black2</item>
     </style>
 
     <!--  Bottom navigation custom theme  -->
