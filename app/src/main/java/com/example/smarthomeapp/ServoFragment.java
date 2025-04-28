@@ -175,11 +175,11 @@ public class ServoFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
                     String status = response.getString("servoPintuState");
-                    tv_jendela.setText(status);
+                    tv_pintu.setText(status);
                     if (status.equals("Pintu Terbuka")){
-                        jendelaSwitch.setChecked(true);
+                        pintuSwitch.setChecked(true);
                     }else {
-                        jendelaSwitch.setChecked(false);
+                        pintuSwitch.setChecked(false);
                     }
                 } catch (JSONException e) {
                     Log.e("Error JsonObject Response : ", e.toString());
