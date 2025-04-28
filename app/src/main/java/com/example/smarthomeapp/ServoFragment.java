@@ -58,7 +58,7 @@ public class ServoFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect"," : "+error);
+                Log.e("Error to Connect Servo"," : "+error);
             }
         });
 

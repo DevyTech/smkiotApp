@@ -66,7 +66,7 @@ public class LedFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect"," : "+error);
+                Log.e("Error to Connect LED"," : "+error);
             }
         });
 
@@ -194,7 +194,7 @@ public class LedFragment extends Fragment {
                 },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect : ", error.toString());
+                Log.e("Error to Connect LED : "+ledId, error.toString());
             }
         });
 
@@ -224,7 +224,7 @@ public class LedFragment extends Fragment {
                     }
 
                 } catch (JSONException e){
-                    Log.e("Error JsonObject Response : ", e.toString());
+                    Log.e("Error JsonObject Response LED: ", e.toString());
                 } finally {
                     isLoading = false;
                 }

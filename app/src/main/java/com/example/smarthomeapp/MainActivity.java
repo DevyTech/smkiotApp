@@ -1,5 +1,9 @@
 package com.example.smarthomeapp;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,8 +11,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestQueue.start();
 
-        url = "http://192.168.1.54:8080";
+//        url = "http://192.168.1.54:8080";
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         getSupportFragmentManager().beginTransaction().add(R.id.frame, new SensorFragment()).commit();
         bottomNavigationView.setSelectedItemId(R.id.sensorMenu);
@@ -59,5 +68,41 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StringRequest checkConnection = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(MainActivity.this, "Connection Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error to Connect ESP32"," : "+error);
+                showInputDialog();
+            }
+        });
+
+        MySingleton.getInstance(this).addToRequestQueue(checkConnection);
+    }
+
+    private void showInputDialog(){
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+        builder.setTitle("Connect to ESP32");
+        builder.setView(view);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Connect", (dialogInterface, i) -> {
+            String ipAddress = view.findViewById(R.id.ip_address).toString();
+            url = "http://"+ipAddress+":8080";
+        });
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+        });
+        builder.create().show();
     }
 }

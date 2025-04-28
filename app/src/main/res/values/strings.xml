@@ -20,4 +20,7 @@
     <string name="airTitle">Air</string>
     <string name="gasTitle">Gas</string>
     <string name="asapTitle">Asap</string>
+
+    <!--  Dialog Strings  -->
+    <string name="dialogInput">IP Address</string>
 </resources>
