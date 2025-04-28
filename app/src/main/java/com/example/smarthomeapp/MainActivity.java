@@ -1,11 +1,16 @@
 package com.example.smarthomeapp;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,14 +22,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
     private RequestQueue requestQueue;
-
+    private boolean isConnect;
+    private AlertDialog dialog;
     public String url;
 
     public static MainActivity mainActivity;
@@ -73,16 +82,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        checkConnection();
+    }
+
+    private void checkConnection(){
         StringRequest checkConnection = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        isConnect = true;
                         Toast.makeText(MainActivity.this, "Connection Successfully", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error to Connect ESP32"," : "+error);
+                isConnect = false;
+                if (dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 showInputDialog();
             }
         });
@@ -91,18 +110,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showInputDialog(){
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-        builder.setTitle("Connect to ESP32");
-        builder.setView(view);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Connect", (dialogInterface, i) -> {
-            String ipAddress = view.findViewById(R.id.ip_address).toString();
-            url = "http://"+ipAddress+":8080";
-        });
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-        });
-        builder.create().show();
+        if (!isConnect){
+            View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
+            TextInputEditText ipAddress = view.findViewById(R.id.ip_address);
+            TextInputLayout iplayout = view.findViewById(R.id.iplayout);
+            ProgressBar loading = view.findViewById(R.id.loading);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+            builder.setTitle("Connect to ESP32");
+            builder.setView(view);
+            builder.setCancelable(false);
+            builder.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loading.setVisibility(View.VISIBLE);
+                    String ip = ipAddress.getText().toString();
+                    url = "http://"+ip+":8080";
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            });
+
+            dialog = builder.create();
+            dialog.setOnShowListener(d -> {
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+                positiveButton.setOnClickListener(v -> {
+                    String ip = ipAddress.getText().toString();
+                    if (!ip.isEmpty()){
+                        positiveButton.setVisibility(View.GONE);
+                        negativeButton.setVisibility(View.GONE);
+                        iplayout.setVisibility(View.GONE);
+                        loading.setVisibility(View.VISIBLE);
+
+                        url = "http://"+ip+":8080";
+                        new Handler().postDelayed(()->{
+                            checkConnection();
+                        },5000);
+                    }else {
+                        ipAddress.setError("IP Address is Required");
+                    }
+                });
+            });
+            dialog.show();
+        }else {
+            Toast.makeText(MainActivity.this, "Connection Successfully", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
