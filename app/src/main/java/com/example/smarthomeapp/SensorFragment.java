@@ -84,9 +84,9 @@ public class SensorFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
                     String statusSuhu = response.getString("temperature");
-                    suhu.setText(statusSuhu +"\\u2103");
+                    suhu.setText(String.format("%s\\u2103", statusSuhu));
                     String statusKelembapan = response.getString("humidity");
-                    kelembapan.setText(statusKelembapan +"\\u0025");
+                    kelembapan.setText(String.format("%s\\u0025", statusKelembapan));
                 } catch (Exception e) {
                     Log.e("Error get Jarak : ", e.toString());
                 }
@@ -107,7 +107,7 @@ public class SensorFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
                     String status = response.getString("distance");
-                    jarak.setText(status +" | CM");
+                    jarak.setText(String.format("%s | CM", status));
                 } catch (Exception e) {
                     Log.e("Error get Jarak : ", e.toString());
                 }
