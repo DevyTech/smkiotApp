@@ -77,7 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tvKelembapanTitle"
-                        android:text="50%"
+                        android:text="50\u0025"
                         style="@style/TextAppearance.AppCompat.Headline"
                         android:fontFamily="@font/ubuntu"/>
                 </RelativeLayout>
