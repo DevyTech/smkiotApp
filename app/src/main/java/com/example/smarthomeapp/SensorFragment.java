@@ -1,7 +1,9 @@
 package com.example.smarthomeapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -21,12 +23,11 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONObject;
 
-public class SensorFragment extends Fragment {
+public class SensorFragment extends Fragment implements MainActivity.SuhuListener, MainActivity.JarakListener, MainActivity.AirListener, MainActivity.GasListener, MainActivity.AsapListener {
+    private Handler handler;
+    private Runnable pollingTask;
 
-    private Runnable sensorRunnable;
-    private Handler handler = new Handler();
-
-    TextView suhu,kelembapan,air,jarak,gas,asap;
+    private TextView suhu,kelembapan,air,jarak,gas,asap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,112 +47,84 @@ public class SensorFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity){
+            ((MainActivity) context).setSuhuListener(this);
+            ((MainActivity) context).setJarakListener(this);
+            ((MainActivity) context).setAirListener(this);
+            ((MainActivity) context).setGasListener(this);
+            ((MainActivity) context).setAsapListener(this);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        ((MainActivity) requireActivity()).setSuhuListener(null);
+        ((MainActivity) requireActivity()).setJarakListener(null);
+        ((MainActivity) requireActivity()).setAirListener(null);
+        ((MainActivity) requireActivity()).setGasListener(null);
+        ((MainActivity) requireActivity()).setAsapListener(null);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        startUpdater();
-        Log.d("Fragment","onResume");
+        startPolling();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopUpdater();
-        Log.d("Fragment","onPause");
+        stopPolling();
     }
 
-    private void startUpdater(){
-        sensorRunnable = new Runnable() {
+    private void startPolling(){
+        handler = new Handler();
+        pollingTask = new Runnable() {
             @Override
             public void run() {
-                getSuhu();
-                getJarak();
-                getGas();
-                getAsap();
-                handler.postDelayed(this, 500);
+                ((MainActivity) requireActivity()).panggilSuhuAPI();
+                ((MainActivity) requireActivity()).panggilJarakAPI();
+                ((MainActivity) requireActivity()).panggilAirAPI();
+                ((MainActivity) requireActivity()).panggilGasAPI();
+                ((MainActivity) requireActivity()).panggilAsapAPI();
+                handler.postDelayed(this,500);
             }
         };
-        handler.post(sensorRunnable);
+        handler.post(pollingTask);
     }
 
-    private void stopUpdater(){
-        handler.removeCallbacks(sensorRunnable);
+    private void stopPolling(){
+        if (handler != null && pollingTask != null){
+            handler.removeCallbacks(pollingTask);
+        }
     }
 
-    private void getSuhu(){
-        JsonObjectRequest suhuRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/kelembapan",
-                null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String statusSuhu = response.getString("temperature");
-                    String statusKelembapan = response.getString("humidity");
-                    suhu.setText(String.format("%s\u2103", statusSuhu));
-                    kelembapan.setText(String.format("%s%%", statusKelembapan));
-                } catch (Exception e) {
-                    Log.e("Error get Kelembapan : ", e.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response Error Kelembapan : ", error.toString());
-            }
-        });
-        MySingleton.getInstance(getActivity()).addToRequestQueue(suhuRequest);
+    @Override
+    public void onSuhuReceived(String suhuReceived, String kelembapanReceived) {
+        suhu.setText(String.format("%s℃", suhuReceived));
+        kelembapan.setText(String.format("%s%%", kelembapanReceived));
     }
 
-    private void getJarak(){
-        JsonObjectRequest jarakRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/jarak",
-                null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String status = response.getString("distance");
-                    jarak.setText(String.format("%s | CM", status));
-                } catch (Exception e) {
-                    Log.e("Error get Jarak : ", e.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response Error Jarak : ", error.toString());
-            }
-        });
-        MySingleton.getInstance(getActivity()).addToRequestQueue(jarakRequest);
+    @Override
+    public void onJarakReceived(String jarakReceived, String servoStatus) {
+        jarak.setText(String.format("%s | CM", jarakReceived));
     }
 
-    private void getGas(){
-        StringRequest gasRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url + "/gas",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        gas.setText(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response Error gas : ", error.toString());
-            }
-        });
-
-        MySingleton.getInstance(getActivity()).addToRequestQueue(gasRequest);
+    @Override
+    public void onAirReceived(String airReceived) {
+        air.setText(airReceived);
     }
 
-    private void getAsap(){
-        StringRequest asapRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url + "/asap",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        asap.setText(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response Error asap : ", error.toString());
-            }
-        });
+    @Override
+    public void onAsapReceived(String asapReceived) {
+        asap.setText(asapReceived);
+    }
 
-        MySingleton.getInstance(getActivity()).addToRequestQueue(asapRequest);
+    @Override
+    public void onGasReceived(String gasReceived) {
+        gas.setText(gasReceived);
     }
 }

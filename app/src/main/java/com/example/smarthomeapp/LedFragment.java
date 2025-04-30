@@ -1,6 +1,5 @@
 package com.example.smarthomeapp;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -13,23 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.card.MaterialCardView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class LedFragment extends Fragment {
-    private MaterialCardView teras,tengah,kamar1,kamar2,dapur,garasi;
+    private MaterialCardView all,tengah,kamar1,kamar2,dapur,garasi;
 
-    private ImageView ivTeras,ivTengah,ivKamar1,ivKamar2,ivDapur,ivGarasi;
-
-    private boolean isLoading = false;
-    private boolean isTerasOn = false;
+    private ImageView ivall,ivTengah,ivKamar1,ivKamar2,ivDapur,ivGarasi;
+    private boolean isallOn = false;
     private boolean isTengahOn = false;
     private boolean isKamar1On = false;
     private boolean isKamar2On = false;
@@ -42,43 +31,59 @@ public class LedFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_led, container, false);
 
-        teras = view.findViewById(R.id.mcv_ledTeras);
+        all = view.findViewById(R.id.mcv_ledAll);
         tengah = view.findViewById(R.id.mcv_ledTengah);
         kamar1 = view.findViewById(R.id.mcv_ledKamar1);
         kamar2 = view.findViewById(R.id.mcv_ledKamar2);
         dapur = view.findViewById(R.id.mcv_ledDapur);
         garasi = view.findViewById(R.id.mcv_ledGarasi);
 
-        ivTeras = view.findViewById(R.id.imgvTeras);
+        ivall = view.findViewById(R.id.imgvAll);
         ivTengah = view.findViewById(R.id.imgvTengah);
         ivKamar1 = view.findViewById(R.id.imgvKamar1);
         ivKamar2 = view.findViewById(R.id.imgvKamar2);
         ivDapur = view.findViewById(R.id.imgvDapur);
         ivGarasi = view.findViewById(R.id.imgvGarasi);
 
-        teras.setOnClickListener(new View.OnClickListener() {
+        all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading){
-                    toggleLed("teras");
-                }
-                if (isTerasOn){
-                    teras.setCardBackgroundColor(Color.TRANSPARENT);
-                    ivTeras.setImageResource(R.drawable.baseline_lightbulb_outline_148);
+                ((MainActivity)requireActivity()).toggleLed("all", new API.LEDCallback() {
+                    @Override
+                    public void onSuccess(String led) {
+                        Log.d("Response Led :", led);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("Response Error Led : ", error);
+                    }
+                });
+                if (isallOn){
+                    all.setCardBackgroundColor(Color.TRANSPARENT);
+                    ivall.setImageResource(R.drawable.baseline_lightbulb_outline_148);
                 } else {
-                    teras.setCardBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.blue));
-                    ivTeras.setImageResource(R.drawable.baseline_lightbulb_148);
+                    all.setCardBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.blue));
+                    ivall.setImageResource(R.drawable.baseline_lightbulb_148);
                 }
-                isTerasOn = !isTerasOn;
+                isallOn = !isallOn;
             }
         });
 
         tengah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading){
-                    toggleLed("tengah");
-                }
+                ((MainActivity)requireActivity()).toggleLed("tengah", new API.LEDCallback() {
+                    @Override
+                    public void onSuccess(String led) {
+                        Log.d("Response Led :", led);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("Response Error Led : ", error);
+                    }
+                });
                 if (isTengahOn){
                     tengah.setCardBackgroundColor(Color.TRANSPARENT);
                     ivTengah.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -93,9 +98,17 @@ public class LedFragment extends Fragment {
         kamar1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading){
-                    toggleLed("kamar1");
-                }
+                ((MainActivity)requireActivity()).toggleLed("kamar1", new API.LEDCallback() {
+                    @Override
+                    public void onSuccess(String led) {
+                        Log.d("Response Led :", led);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("Response Error Led : ", error);
+                    }
+                });
                 if (isKamar1On){
                     kamar1.setCardBackgroundColor(Color.TRANSPARENT);
                     ivKamar1.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -106,13 +119,20 @@ public class LedFragment extends Fragment {
                 isKamar1On = !isKamar1On;
             }
         });
-
         kamar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading){
-                    toggleLed("kamar2");
-                }
+                ((MainActivity)requireActivity()).toggleLed("kamar2", new API.LEDCallback() {
+                    @Override
+                    public void onSuccess(String led) {
+                        Log.d("Response Led :", led);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("Response Error Led : ", error);
+                    }
+                });
                 if (isKamar2On){
                     kamar2.setCardBackgroundColor(Color.TRANSPARENT);
                     ivKamar2.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -123,13 +143,20 @@ public class LedFragment extends Fragment {
                 isKamar2On = !isKamar2On;
             }
         });
-
         dapur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading){
-                    toggleLed("dapur");
-                }
+                ((MainActivity)requireActivity()).toggleLed("dapur", new API.LEDCallback() {
+                    @Override
+                    public void onSuccess(String led) {
+                        Log.d("Response Led :", led);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("Response Error Led : ", error);
+                    }
+                });
                 if (isDapurOn){
                     dapur.setCardBackgroundColor(Color.TRANSPARENT);
                     ivDapur.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -140,13 +167,20 @@ public class LedFragment extends Fragment {
                 isDapurOn = !isDapurOn;
             }
         });
-
         garasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isLoading){
-                    toggleLed("garasi");
-                }
+                ((MainActivity)requireActivity()).toggleLed("garasi", new API.LEDCallback() {
+                    @Override
+                    public void onSuccess(String led) {
+                        Log.d("Response Led :", led);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("Response Error Led : ", error);
+                    }
+                });
                 if (isGarasiOn){
                     garasi.setCardBackgroundColor(Color.TRANSPARENT);
                     ivGarasi.setImageResource(R.drawable.baseline_lightbulb_outline_148);
@@ -159,67 +193,5 @@ public class LedFragment extends Fragment {
         });
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLedStatus();
-    }
-
-    private void toggleLed(String ledId){
-        StringRequest request = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url + "/toggle-led?led=" + ledId,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        int maxLength = Math.min(500, response.length());
-                        Log.d("Response "+ledId,"Response is : " + response.substring(0, maxLength));
-                    }
-                },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect LED : "+ledId, error.toString());
-            }
-        });
-
-        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
-    }
-
-    private void getLedStatus(){
-        isLoading = true;
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, MainActivity.mainActivity.url + "/get-led-status",
-                null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String statusTeras = response.getString("stateTeras");
-                    String statusTengah = response.getString("stateTengah");
-                    String statusKamar1 = response.getString("stateKamar1");
-                    String statusKamar2 = response.getString("stateKamar2");
-                    String statusDapur = response.getString("stateDapur");
-                    String statusGarasi = response.getString("stateGarasi");
-
-                    if (statusTeras.equals("ON")){
-                        teras.setCardBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.blue));
-                        ivTengah.setImageResource(R.drawable.baseline_lightbulb_148);
-                    }else {
-                        tengah.setCardBackgroundColor(Color.TRANSPARENT);
-                        ivTengah.setImageResource(R.drawable.baseline_lightbulb_outline_148);
-                    }
-
-                } catch (JSONException e){
-                    Log.e("Error JsonObject Response LED: ", e.toString());
-                } finally {
-                    isLoading = false;
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error get Status : ", error.toString());
-            }
-        });
-
-        MySingleton.getInstance(getActivity()).addToRequestQueue(objectRequest);
     }
 }

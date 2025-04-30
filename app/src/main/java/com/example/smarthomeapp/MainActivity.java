@@ -23,12 +23,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isConnect;
     private AlertDialog dialog;
     public String url;
-
-    public static MainActivity mainActivity;
 
 
     @Override
@@ -55,32 +56,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        mainActivity = this;
-
         requestQueue = MySingleton.getInstance(this).getRequestQueue();
 
         requestQueue.start();
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            int itemId = item.getItemId();
-//            if (itemId == R.id.sensorMenu){
-////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SensorFragment()).commit();
-//                return true;
-//            } else if (itemId == R.id.ledMenu) {
-////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new LedFragment()).commit();
-//                return true;
-//            } else if (itemId == R.id.servoMenu) {
-////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new ServoFragment()).commit();
-//                return true;
-//            } else if (itemId == R.id.cameraMenu) {
-////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new CameraFragment()).commit();
-//                return true;
-//            }
-//            return false;
-//        });
         fragmentManager = getSupportFragmentManager();
         sensorFragment = fragmentManager.findFragmentByTag("sensor");
         ledFragment = fragmentManager.findFragmentByTag("led");
@@ -207,5 +188,178 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+
+    //=============================================================================================
+    // Sensor API Listener
+    //=============================================================================================
+    public interface SuhuListener{
+        void onSuhuReceived(String suhu, String kelembapan);
+    }
+    public interface JarakListener{
+        void onJarakReceived(String jarak, String servo);
+    }
+    public interface AirListener{
+        void onAirReceived(String air);
+    }
+    public interface GasListener{
+        void onGasReceived(String gas);
+    }
+    public interface AsapListener{
+        void onAsapReceived(String asap);
+    }
+
+    private SuhuListener suhuListener;
+    private JarakListener jarakListener;
+    private AirListener airListener;
+    private GasListener gasListener;
+    private AsapListener asapListener;
+
+    public void setSuhuListener(SuhuListener listener){
+        this.suhuListener = listener;
+    }
+    public void setJarakListener(JarakListener listener){
+        this.jarakListener = listener;
+    }
+    public void setAirListener(AirListener listener){
+        this.airListener = listener;
+    }
+    public void setGasListener(GasListener listener){
+        this.gasListener = listener;
+    }
+    public void setAsapListener(AsapListener listener){
+        this.asapListener = listener;
+    }
+
+    public void panggilSuhuAPI(){
+        API.getSuhu(this, url, new API.SuhuCallback() {
+            @Override
+            public void onSuccess(String suhu, String kelembapan) {
+                if (suhuListener != null){
+                    suhuListener.onSuhuReceived(suhu, kelembapan);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Suhu Error: ", error);
+            }
+        });
+    }
+    public void panggilJarakAPI(){
+        API.getJarak(this, url, new API.JarakCallback() {
+            @Override
+            public void onSuccess(String jarak, String servo) {
+                if (jarakListener != null){
+                    jarakListener.onJarakReceived(jarak, servo);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Jarak Error: ", error);
+            }
+        });
+    }
+    public void panggilAirAPI(){
+        API.getAir(this, url, new API.AirCallback() {
+            @Override
+            public void onSuccess(String air) {
+                if (airListener != null){
+                    airListener.onAirReceived(air);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Air Error: ", error);
+            }
+        });
+    }
+    public void panggilGasAPI(){
+        API.getGas(this, url, new API.GasCallback() {
+            @Override
+            public void onSuccess(String gas) {
+                if (gasListener != null){
+                    airListener.onAirReceived(gas);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Gas Error: ", error);
+            }
+        });
+    }
+    public void panggilAsapAPI(){
+        API.getAsap(this, url, new API.AsapCallback() {
+            @Override
+            public void onSuccess(String asap) {
+                if (asapListener != null){
+                    asapListener.onAsapReceived(asap);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Asap Error: ", error);
+            }
+        });
+    }
+
+    //=============================================================================================
+    // LED API Listener
+    //=============================================================================================
+    public void toggleLed(String ledId, API.LEDCallback callback){
+        API.toggleLed(this, url, ledId, callback);
+    }
+    //=============================================================================================
+    // Servo API Listener
+    //=============================================================================================
+    public interface ServoPintuListener{
+        void onServoPintuReceived(String servo);
+    }
+    public interface ServoJendelaListener{
+        void onServoJendelaReceived(String servo);
+    }
+    private ServoJendelaListener servoJendelaListener;
+    private ServoPintuListener servoPintuListener;
+    public void setServoJendelaListener(ServoJendelaListener listener){
+        this.servoJendelaListener = listener;
+    }
+    public void setServoPintuListener(ServoPintuListener listener){
+        this.servoPintuListener = listener;
+    }
+    public void panggilServoJendelaAPI(){
+        API.toggleServoJendela(this, url, new API.ServoJendelaCallback() {
+            @Override
+            public void onSuccess(String servo) {
+                if (servoJendelaListener != null){
+                    servoJendelaListener.onServoJendelaReceived(servo);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Servo Jendela Error: ", error);
+            }
+        });
+    }
+    public void panggilServoPintuAPI(){
+        API.toggleServoPintu(this, url, new API.ServoPintuCallback() {
+            @Override
+            public void onSuccess(String servo) {
+                if (servoPintuListener != null){
+                    servoPintuListener.onServoPintuReceived(servo);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Servo Pintu Error: ", error);
+            }
+        });
     }
 }

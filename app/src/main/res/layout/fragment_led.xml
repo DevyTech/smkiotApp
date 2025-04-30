@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_ledTeras"
+            android:id="@+id/mcv_ledAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -27,7 +27,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgvTeras"
+                    android:id="@+id/imgvAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_lightbulb_outline_148"
@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dp"
                     android:textAllCaps="true"
-                    android:text="Teras"/>
+                    android:text="ALL"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
