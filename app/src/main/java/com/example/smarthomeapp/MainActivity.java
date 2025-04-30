@@ -15,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,6 +33,8 @@ import com.google.android.material.textfield.TextInputLayout;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
+    private FragmentManager fragmentManager;
+    private Fragment sensorFragment,ledFragment,servoFragment,cameraFragment;
 
     private RequestQueue requestQueue;
     private boolean isConnect;
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public String url;
 
     public static MainActivity mainActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +61,63 @@ public class MainActivity extends AppCompatActivity {
 
         requestQueue.start();
 
-//        url = "http://192.168.1.54:8080";
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        getSupportFragmentManager().beginTransaction().add(R.id.frame, new SensorFragment()).commit();
-        bottomNavigationView.setSelectedItemId(R.id.sensorMenu);
+
+//        bottomNavigationView.setOnItemSelectedListener(item -> {
+//            int itemId = item.getItemId();
+//            if (itemId == R.id.sensorMenu){
+////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SensorFragment()).commit();
+//                return true;
+//            } else if (itemId == R.id.ledMenu) {
+////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new LedFragment()).commit();
+//                return true;
+//            } else if (itemId == R.id.servoMenu) {
+////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new ServoFragment()).commit();
+//                return true;
+//            } else if (itemId == R.id.cameraMenu) {
+////                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new CameraFragment()).commit();
+//                return true;
+//            }
+//            return false;
+//        });
+        fragmentManager = getSupportFragmentManager();
+        sensorFragment = fragmentManager.findFragmentByTag("sensor");
+        ledFragment = fragmentManager.findFragmentByTag("led");
+        servoFragment = fragmentManager.findFragmentByTag("servo");
+        cameraFragment = fragmentManager.findFragmentByTag("camera");
+
+        if (sensorFragment == null){
+            sensorFragment = new SensorFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, sensorFragment,"sensor").hide(sensorFragment).commit();
+        }
+        if (ledFragment == null){
+            ledFragment = new LedFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, ledFragment,"led").hide(ledFragment).commit();
+        }
+        if (servoFragment == null){
+            servoFragment = new ServoFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, servoFragment,"servo").hide(servoFragment).commit();
+        }
+        if (cameraFragment == null){
+            cameraFragment = new CameraFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, cameraFragment,"camera").hide(cameraFragment).commit();
+        }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
+            fragmentManager.beginTransaction().hide(sensorFragment).hide(ledFragment).hide(servoFragment).hide(cameraFragment).commit();
             int itemId = item.getItemId();
             if (itemId == R.id.sensorMenu){
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SensorFragment()).commit();
+                fragmentManager.beginTransaction().show(sensorFragment).commit();
                 return true;
             } else if (itemId == R.id.ledMenu) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new LedFragment()).commit();
+                fragmentManager.beginTransaction().show(ledFragment).commit();
                 return true;
             } else if (itemId == R.id.servoMenu) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new ServoFragment()).commit();
+                fragmentManager.beginTransaction().show(servoFragment).commit();
                 return true;
             } else if (itemId == R.id.cameraMenu) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new CameraFragment()).commit();
+                fragmentManager.beginTransaction().show(cameraFragment).commit();
                 return true;
             }
             return false;
@@ -90,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        fragmentManager.beginTransaction().show(sensorFragment).commit();
+                        bottomNavigationView.setSelectedItemId(R.id.sensorMenu);
                         isConnect = true;
                         Toast.makeText(MainActivity.this, "Connection Successfully", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
@@ -98,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error to Connect ESP32"," : "+error);
+                Toast.makeText(MainActivity.this, "Can't Connect to ESP32", Toast.LENGTH_SHORT).show();
                 isConnect = false;
                 if (dialog != null && dialog.isShowing()){
                     dialog.dismiss();

@@ -56,22 +56,6 @@ public class LedFragment extends Fragment {
         ivDapur = view.findViewById(R.id.imgvDapur);
         ivGarasi = view.findViewById(R.id.imgvGarasi);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        int maxLength = Math.min(500, response.length());
-                        Log.d("Response","Response is : " + response.substring(0, maxLength));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect LED"," : "+error);
-            }
-        });
-
-        MySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
-
         teras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -49,12 +49,14 @@ public class SensorFragment extends Fragment {
     public void onResume() {
         super.onResume();
         startUpdater();
+        Log.d("Fragment","onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopUpdater();
+        Log.d("Fragment","onPause");
     }
 
     private void startUpdater(){
@@ -66,7 +68,6 @@ public class SensorFragment extends Fragment {
                 getGas();
                 getAsap();
                 handler.postDelayed(this, 500);
-                Toast.makeText(getActivity(), "Looper", Toast.LENGTH_SHORT).show();
             }
         };
         handler.post(sensorRunnable);
@@ -74,7 +75,6 @@ public class SensorFragment extends Fragment {
 
     private void stopUpdater(){
         handler.removeCallbacks(sensorRunnable);
-        Toast.makeText(getActivity(), "Looper Pause", Toast.LENGTH_SHORT).show();
     }
 
     private void getSuhu(){
@@ -84,17 +84,17 @@ public class SensorFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
                     String statusSuhu = response.getString("temperature");
-                    suhu.setText(String.format("%s\\u2103", statusSuhu));
                     String statusKelembapan = response.getString("humidity");
-                    kelembapan.setText(String.format("%s\\u0025", statusKelembapan));
+                    suhu.setText(String.format("%s\u2103", statusSuhu));
+                    kelembapan.setText(String.format("%s%%", statusKelembapan));
                 } catch (Exception e) {
-                    Log.e("Error get Jarak : ", e.toString());
+                    Log.e("Error get Kelembapan : ", e.toString());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error get Jarak : ", error.toString());
+                Log.e("Response Error Kelembapan : ", error.toString());
             }
         });
         MySingleton.getInstance(getActivity()).addToRequestQueue(suhuRequest);
@@ -115,7 +115,7 @@ public class SensorFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error get Jarak : ", error.toString());
+                Log.e("Response Error Jarak : ", error.toString());
             }
         });
         MySingleton.getInstance(getActivity()).addToRequestQueue(jarakRequest);
@@ -131,7 +131,7 @@ public class SensorFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error to get gas : ", error.toString());
+                Log.e("Response Error gas : ", error.toString());
             }
         });
 
@@ -148,7 +148,7 @@ public class SensorFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error to get asap : ", error.toString());
+                Log.e("Response Error asap : ", error.toString());
             }
         });
 

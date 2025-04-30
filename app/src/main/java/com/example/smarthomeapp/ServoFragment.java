@@ -48,23 +48,6 @@ public class ServoFragment extends Fragment {
         img_jendela = view.findViewById(R.id.imgJendela);
         img_pintu = view.findViewById(R.id.imgPintu);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, MainActivity.mainActivity.url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        int maxLength = Math.min(500, response.length());
-                        Log.d("Response","Response is : " + response.substring(0, maxLength));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error to Connect Servo"," : "+error);
-            }
-        });
-
-        // Add a request to RequestQueue
-        MySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
-
 
 
         jendelaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
