@@ -26,7 +26,7 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ServoFragment extends Fragment implements MainActivity.ServoJendelaListener, MainActivity.ServoPintuListener {
+public class ServoFragment extends Fragment implements MainActivity.JarakListener, MainActivity.ServoJendelaListener, MainActivity.ServoPintuListener {
     private TextView tv_garasi,tv_jendela,tv_pintu;
     private MaterialSwitch jendelaSwitch, pintuSwitch;
     private ImageView img_garasi,img_jendela,img_pintu;
@@ -53,7 +53,6 @@ public class ServoFragment extends Fragment implements MainActivity.ServoJendela
         jendelaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                tv_jendela.setText(b ? "Jendela Terbuka" : "Jendela Tertutup");
                 ((MainActivity)requireActivity()).panggilServoJendelaAPI();
                 img_jendela.setColorFilter(b ? ContextCompat.getColor(requireActivity(), R.color.blue) : ContextCompat.getColor(requireActivity(), R.color.gray));
             }
@@ -62,7 +61,6 @@ public class ServoFragment extends Fragment implements MainActivity.ServoJendela
         pintuSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                tv_pintu.setText(b ? "Pintu Terbuka" : "Pintu Tertutup");
                 ((MainActivity)requireActivity()).panggilServoPintuAPI();
                 img_pintu.setColorFilter(b ? ContextCompat.getColor(requireActivity(), R.color.blue) : ContextCompat.getColor(requireActivity(), R.color.gray));
             }
@@ -77,6 +75,7 @@ public class ServoFragment extends Fragment implements MainActivity.ServoJendela
         super.onAttach(context);
         ((MainActivity)context).setServoJendelaListener(this);
         ((MainActivity)context).setServoPintuListener(this);
+        ((MainActivity)context).setJarakListener(this);
     }
 
     @Override
@@ -84,6 +83,7 @@ public class ServoFragment extends Fragment implements MainActivity.ServoJendela
         super.onDetach();
         ((MainActivity)requireActivity()).setServoJendelaListener(null);
         ((MainActivity)requireActivity()).setServoPintuListener(null);
+        ((MainActivity)requireActivity()).setJarakListener(null);
     }
 
     @Override
@@ -94,5 +94,11 @@ public class ServoFragment extends Fragment implements MainActivity.ServoJendela
     @Override
     public void onServoPintuReceived(String servo) {
         tv_pintu.setText(servo);
+    }
+
+    @Override
+    public void onJarakReceived(String jarak, String servo) {
+        tv_garasi.setText(servo);
+        img_garasi.setColorFilter(servo.equals("Garasi Terbuka") ? ContextCompat.getColor(requireActivity(), R.color.blue) : ContextCompat.getColor(requireActivity(), R.color.gray));
     }
 }

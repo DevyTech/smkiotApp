@@ -48,77 +48,78 @@ public class API {
         void onSuccess(String servo);
         void onError(String error);
     }
-    public static void getSuhu(Context context, String url, SuhuCallback callback){
+    public static void getSuhu(Context context, String url, SuhuCallback suhuCallback){
         JsonObjectRequest suhuRequest = new JsonObjectRequest(Request.Method.GET, url+"/kelembapan",
                 null, response -> {
             try {
                 String statusSuhu = response.getString("temperature");
                 String statusKelembapan = response.getString("humidity");
-                callback.onSuccess(statusSuhu, statusKelembapan);
+                suhuCallback.onSuccess(statusSuhu, statusKelembapan);
             }catch (Exception e){
-                callback.onError(e.toString());
+                suhuCallback.onError(e.toString());
                 Log.e("Error get Kelembapan : ", e.toString());
             }
         }, error -> {
             if (error != null){
-                callback.onError(error.toString());
+                suhuCallback.onError(error.toString());
                 Log.e("Response Error Kelembapan : ", error.toString());
             }
         });
         MySingleton.getInstance(context).addToRequestQueue(suhuRequest);
     }
 
-    public static void getJarak(Context context, String url, JarakCallback callback){
+    public static void getJarak(Context context, String url, JarakCallback jarakCallback){
         JsonObjectRequest jarakRequest = new JsonObjectRequest(Request.Method.GET, url+"/jarak",
                 null, response -> {
             try {
                 String statusJarak = response.getString("distance");
                 String statusServo = response.getString("servo");
-                callback.onSuccess(statusJarak, statusServo);
+                jarakCallback.onSuccess(statusJarak, statusServo);
             }catch (Exception e){
-                callback.onError(e.toString());
+                jarakCallback.onError(e.toString());
                 Log.e("Error get Jarak : ", e.toString());
             }
         }, error -> {
             if (error != null){
-                callback.onError(error.toString());
+                jarakCallback.onError(error.toString());
                 Log.e("Response Error Jarak : ", error.toString());
             }
         });
         MySingleton.getInstance(context).addToRequestQueue(jarakRequest);
     }
 
-    public static void getAir(Context context, String url, AirCallback callback){
+    public static void getAir(Context context, String url, AirCallback airCallback){
         StringRequest airRequest = new StringRequest(Request.Method.GET, url + "/hujan"
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String statusAir = response;
-                callback.onSuccess(statusAir);
+                airCallback.onSuccess(statusAir);
                 Log.d("Response Air : ", response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError(error.toString());
+                airCallback.onError(error.toString());
                 Log.e("Response Error Air : ", error.toString());
             }
         });
 
         MySingleton.getInstance(context).addToRequestQueue(airRequest);
     }
-    public static void getGas(Context context, String url, GasCallback callback){
+    public static void getGas(Context context, String url, GasCallback gasCallback){
         StringRequest gasRequest = new StringRequest(Request.Method.GET, url + "/gas"
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String statusGas = response;
-                callback.onSuccess(statusGas);
+                gasCallback.onSuccess(statusGas);
+                Log.d("Response Gas : ", response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError(error.toString());
+                gasCallback.onError(error.toString());
                 Log.e("Response Error Gas : ", error.toString());
             }
         });
@@ -126,18 +127,18 @@ public class API {
         MySingleton.getInstance(context).addToRequestQueue(gasRequest);
     }
 
-    public static void getAsap(Context context, String url, AsapCallback callback){
+    public static void getAsap(Context context, String url, AsapCallback asapCallback){
         StringRequest asapRequest = new StringRequest(Request.Method.GET, url + "/asap"
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String statusAsap = response;
-                callback.onSuccess(statusAsap);
+                asapCallback.onSuccess(statusAsap);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError(error.toString());
+                asapCallback.onError(error.toString());
                 Log.e("Response Error Asap : ", error.toString());
             }
         });
@@ -145,7 +146,7 @@ public class API {
         MySingleton.getInstance(context).addToRequestQueue(asapRequest);
     }
 
-    public static void toggleLed(Context context, String url, String ledId, LEDCallback callback){
+    public static void toggleLed(Context context, String url, String ledId, LEDCallback ledCallback){
         String fullUrl = url + "/toggle-led?led=" + ledId;
 
         StringRequest ledRequest = new StringRequest(Request.Method.GET, fullUrl
@@ -154,48 +155,48 @@ public class API {
             public void onResponse(String response) {
                 int maxLength = Math.min(500, response.length());
                 Log.d("Response " + ledId, "Response is : " + response.substring(0, maxLength));
-                callback.onSuccess(response);
+                ledCallback.onSuccess(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError(error.toString());
+                ledCallback.onError(error.toString());
                 Log.e("Response Error Led : ", error.toString());
             }
         });
 
         MySingleton.getInstance(context).addToRequestQueue(ledRequest);
     }
-    public static void toggleServoJendela(Context context, String url, ServoJendelaCallback callback){
+    public static void toggleServoJendela(Context context, String url, ServoJendelaCallback jendelaCallback){
         StringRequest jendelaRequest = new StringRequest(Request.Method.GET, url + "/servoJendela"
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String statusServo = response;
-                callback.onSuccess(statusServo);
+                jendelaCallback.onSuccess(statusServo);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError(error.toString());
+                jendelaCallback.onError(error.toString());
                 Log.e("Response Error Jendela : ", error.toString());
             }
         });
 
         MySingleton.getInstance(context).addToRequestQueue(jendelaRequest);
     }
-    public static void toggleServoPintu(Context context, String url, ServoPintuCallback callback){
+    public static void toggleServoPintu(Context context, String url, ServoPintuCallback pintuCallback){
         StringRequest pintuRequest = new StringRequest(Request.Method.GET, url + "/servoPintu"
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String statusServo = response;
-                callback.onSuccess(statusServo);
+                pintuCallback.onSuccess(statusServo);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onError(error.toString());
+                pintuCallback.onError(error.toString());
                 Log.e("Response Error Pintu : ", error.toString());
             }
         });
