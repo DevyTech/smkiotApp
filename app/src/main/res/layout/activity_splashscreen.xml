@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".Splashscreen">
 
+    <ImageView
+        android:id="@+id/imvSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/logo_sekolah"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/tv_splash"/>
+
     <TextView
         android:id="@+id/tv_splash"
         android:layout_width="wrap_content"
