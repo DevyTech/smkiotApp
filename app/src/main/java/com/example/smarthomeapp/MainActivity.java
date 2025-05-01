@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private boolean isConnect;
     private AlertDialog dialog;
-    public String url;
-
+    public String url,urlCam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,23 +66,6 @@ public class MainActivity extends AppCompatActivity {
         ledFragment = fragmentManager.findFragmentByTag("led");
         servoFragment = fragmentManager.findFragmentByTag("servo");
         cameraFragment = fragmentManager.findFragmentByTag("camera");
-
-        if (sensorFragment == null){
-            sensorFragment = new SensorFragment();
-            fragmentManager.beginTransaction().add(R.id.frame, sensorFragment,"sensor").hide(sensorFragment).commit();
-        }
-        if (ledFragment == null){
-            ledFragment = new LedFragment();
-            fragmentManager.beginTransaction().add(R.id.frame, ledFragment,"led").hide(ledFragment).commit();
-        }
-        if (servoFragment == null){
-            servoFragment = new ServoFragment();
-            fragmentManager.beginTransaction().add(R.id.frame, servoFragment,"servo").hide(servoFragment).commit();
-        }
-        if (cameraFragment == null){
-            cameraFragment = new CameraFragment();
-            fragmentManager.beginTransaction().add(R.id.frame, cameraFragment,"camera").hide(cameraFragment).commit();
-        }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             fragmentManager.beginTransaction().hide(sensorFragment).hide(ledFragment).hide(servoFragment).hide(cameraFragment).commit();
@@ -111,11 +93,31 @@ public class MainActivity extends AppCompatActivity {
         checkConnection();
     }
 
+    private void createFragment(){
+        if (sensorFragment == null){
+            sensorFragment = new SensorFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, sensorFragment,"sensor").hide(sensorFragment).commit();
+        }
+        if (ledFragment == null){
+            ledFragment = new LedFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, ledFragment,"led").hide(ledFragment).commit();
+        }
+        if (servoFragment == null){
+            servoFragment = new ServoFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, servoFragment,"servo").hide(servoFragment).commit();
+        }
+        if (cameraFragment == null){
+            cameraFragment = new CameraFragment();
+            fragmentManager.beginTransaction().add(R.id.frame, cameraFragment,"camera").hide(cameraFragment).commit();
+        }
+    }
+
     private void checkConnection(){
         StringRequest checkConnection = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        createFragment();
                         fragmentManager.beginTransaction().show(sensorFragment).commit();
                         bottomNavigationView.setSelectedItemId(R.id.sensorMenu);
                         isConnect = true;
@@ -143,9 +145,11 @@ public class MainActivity extends AppCompatActivity {
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
             TextInputEditText ipAddress = view.findViewById(R.id.ip_address);
             TextInputLayout iplayout = view.findViewById(R.id.iplayout);
+            TextInputEditText ipAddressCam = view.findViewById(R.id.ip_cam_address);
+            TextInputLayout ipcamlayout = view.findViewById(R.id.ipcamlayout);
             ProgressBar loading = view.findViewById(R.id.loading);
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-            builder.setTitle("Connect to ESP32");
+            builder.setTitle("Connect to ESP32 & Camera");
             builder.setView(view);
             builder.setCancelable(false);
             builder.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
@@ -153,7 +157,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     loading.setVisibility(View.VISIBLE);
                     String ip = ipAddress.getText().toString();
+                    String ipCamera = ipAddressCam.getText().toString();
                     url = "http://"+ip+":8080";
+                    urlCam = "http://"+ipCamera+":81/stream";
                 }
             });
             builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
@@ -167,18 +173,22 @@ public class MainActivity extends AppCompatActivity {
 
                 positiveButton.setOnClickListener(v -> {
                     String ip = ipAddress.getText().toString();
+                    String ipCam = ipAddressCam.getText().toString();
                     if (!ip.isEmpty()){
                         positiveButton.setVisibility(View.GONE);
                         negativeButton.setVisibility(View.GONE);
                         iplayout.setVisibility(View.GONE);
+                        ipcamlayout.setVisibility(View.GONE);
                         loading.setVisibility(View.VISIBLE);
 
                         url = "http://"+ip+":8080";
+                        urlCam = "http://"+ipCam+":81/stream";
                         new Handler().postDelayed(()->{
                             checkConnection();
                         },5000);
                     }else {
                         ipAddress.setError("IP Address is Required");
+                        ipAddressCam.setError("IP Address is Required");
                     }
                 });
             });

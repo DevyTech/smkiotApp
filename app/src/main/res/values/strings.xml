@@ -22,5 +22,6 @@
     <string name="asapTitle">Asap</string>
 
     <!--  Dialog Strings  -->
-    <string name="dialogInput">IP Address</string>
+    <string name="dialogInput">IP Address ESP32</string>
+    <string name="dialogInputCam">IP Address Camera</string>
 </resources>
