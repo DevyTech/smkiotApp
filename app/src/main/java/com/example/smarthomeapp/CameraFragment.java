@@ -23,7 +23,7 @@ public class CameraFragment extends Fragment {
         webView = view.findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://192.168.1.5:81/stream");
+        webView.loadUrl("http://192.168.131.174:81/stream");
 
         return view;
     }

@@ -315,6 +315,29 @@ public class MainActivity extends AppCompatActivity {
     public void toggleLed(String ledId, API.LEDCallback callback){
         API.toggleLed(this, url, ledId, callback);
     }
+
+    public interface LedStatusListener{
+        void onLedStatusReceived(String all, String tengah, String kamar1, String kamar2, String dapur, String garasi);
+    }
+    private LedStatusListener ledStatusListener;
+    public void setLedStatusListener(LedStatusListener listener){
+        this.ledStatusListener = listener;
+    }
+    public void panggilLedStatusAPI(){
+        API.getLedStatus(this, url, new API.LEDStatusCallback() {
+            @Override
+            public void onSuccess(String all, String tengah, String kamar1, String kamar2, String dapur, String garasi) {
+                if (ledStatusListener != null){
+                    ledStatusListener.onLedStatusReceived(all, tengah, kamar1, kamar2, dapur, garasi);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("API Led Status Error: ", error);
+            }
+        });
+    }
     //=============================================================================================
     // Servo API Listener
     //=============================================================================================

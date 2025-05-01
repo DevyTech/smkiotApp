@@ -9,6 +9,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONObject;
+
 public class API {
 
     public interface SuhuCallback{
@@ -38,6 +40,10 @@ public class API {
 
     public interface LEDCallback{
         void onSuccess(String led);
+        void onError(String error);
+    }
+    public interface LEDStatusCallback{
+        void onSuccess(String all, String tengah, String kamar1, String kamar2, String dapur, String garasi);
         void onError(String error);
     }
     public interface ServoJendelaCallback{
@@ -164,6 +170,35 @@ public class API {
         });
 
         MySingleton.getInstance(context).addToRequestQueue(ledRequest);
+    }
+
+    public static void getLedStatus(Context context, String url, LEDStatusCallback ledStatusCallback){
+        JsonObjectRequest ledStatus = new JsonObjectRequest(Request.Method.GET, url+"/get-led-status", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String allLed = response.getString("stateAll");
+                            String terasLed = response.getString("stateTengah");
+                            String kamar1Led = response.getString("stateKamar1");
+                            String kamar2Led = response.getString("stateKamar2");
+                            String dapurLed = response.getString("stateDapur");
+                            String garasiLed = response.getString("stateGarasi");
+                            ledStatusCallback.onSuccess(allLed,terasLed,kamar1Led,kamar2Led,dapurLed,garasiLed);
+                        } catch (Exception e){
+                            Log.e("Error get led Status : ",e.toString());
+                            ledStatusCallback.onError(e.toString());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Response Error Led Status: ", error.toString());
+                ledStatusCallback.onError(error.toString());
+            }
+        });
+
+        MySingleton.getInstance(context).addToRequestQueue(ledStatus);
     }
     public static void toggleServoJendela(Context context, String url, ServoJendelaCallback jendelaCallback){
         StringRequest jendelaRequest = new StringRequest(Request.Method.GET, url + "/servoJendela"
