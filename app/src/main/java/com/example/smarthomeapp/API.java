@@ -95,6 +95,7 @@ public class API {
             public void onResponse(String response) {
                 String statusAir = response;
                 callback.onSuccess(statusAir);
+                Log.d("Response Air : ", response);
             }
         }, new Response.ErrorListener() {
             @Override
