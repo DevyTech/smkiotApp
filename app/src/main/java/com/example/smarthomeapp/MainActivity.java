@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String gas) {
                 if (gasListener != null){
-                    airListener.onAirReceived(gas);
+                    gasListener.onGasReceived(gas);
                 }
             }
 

@@ -95,7 +95,6 @@ public class API {
             public void onResponse(String response) {
                 String statusAir = response;
                 airCallback.onSuccess(statusAir);
-                Log.d("Response Air : ", response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -114,7 +113,6 @@ public class API {
             public void onResponse(String response) {
                 String statusGas = response;
                 gasCallback.onSuccess(statusGas);
-                Log.d("Response Gas : ", response);
             }
         }, new Response.ErrorListener() {
             @Override
